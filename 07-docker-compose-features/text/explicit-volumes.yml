@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  writer:
+    image: "ubuntu"
+    command: ["bash", "-c", "while true; do echo hello $$(date +%s) ; sleep 1; done > /html/index.html"]
+    volumes:
+      - "data:/html:rw"
+
+  server:
+    image: "nginx"
+    ports:
+      - "8080:80"
+    volumes:
+      - "data:/usr/share/nginx/html:ro"
+
+volumes:
+  data:

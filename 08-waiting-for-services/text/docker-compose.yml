@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  web:
+    image: node:17
+    working_dir: /app
+    command: bash -c "npm install && node server.js"
+    volumes:
+      - "build:/app"
+    ports:
+      - "3000:3000"
+
+  redis:
+    image: "redis:alpine"
+    command: sh -c "sleep 20; /usr/local/bin/redis-server"
+    volumes:
+      - data:/data
+
+volumes:
+  data:
+

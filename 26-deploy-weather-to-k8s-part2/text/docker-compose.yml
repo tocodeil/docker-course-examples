@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  weather-api-server:
+    working_dir: /app
+    image: "node:16"
+    command: bash -c "npm install && npm install -g nodemon && nodemon bin/www"
+
+    ports:
+      - "3100:80"
+
+    environment:
+      PORT: 80
+      DEBUG: weather-api-server:*
+
+    env_file:
+      - "env/dev.env"
+
+    volumes:
+      - ./secrets/postgres-passwd:/run/secrets/postgres-passwd
+      - ./weather-api-server/:/app/
+
+  query-script:
+    working_dir: /app
+    command: bash -c "npm install && sleep infinity"
+    image: "node:16"
+    env_file:
+      - "env/dev.env"
+
+    volumes:
+      - ./secrets/postgres-passwd:/run/secrets/postgres-passwd
+      - ./secrets/weather-apikey:/run/secrets/weather-apikey
+      - ./query-script/:/app
+
+
+  db:
+    image: "postgres"
+    env_file:
+      - "env/dev.env"
+
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./db/:/docker-entrypoint-initdb.d/
+      - ./secrets/postgres-passwd:/run/secrets/postgres-passwd
+
+volumes:
+  postgres:
+

@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  web:
+    image: node:17
+    working_dir: /app
+    command: bash -c "npm install && node server.js"
+    volumes:
+      - ".:/app"
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URL: mongodb://root:example@mongo/
+
+  mongo:
+    image: "mongo"
+    command: sh -c "sleep 0; mongod"
+    volumes:
+      - data:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+
+volumes:
+  data:
+

@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  web:
+    image: "ubuntu"
+    command: ["cat", "/etc/shells"]
+    volumes:
+      - "/home/ynon/a.txt:/etc/shells"

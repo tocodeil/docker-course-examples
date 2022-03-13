@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx
+    volumes:
+      - "./html:/usr/share/nginx/html"
+    ports:
+      - "8080:80"
+
+  worker:
+    image: ubuntu
+    working_dir: /app
+    volumes:
+      - "./html:/app"
+    
+    command: bash -c "while true; do date >> hello.txt; sleep 1; done"
+
+

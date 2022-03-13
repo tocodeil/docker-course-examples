@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  query-script:
+    image: node:17
+    working_dir: /app
+    command: sleep infinity
+
+    env_file: ./env/dev.env
+
+    environment:
+      DB_HOST: db
+
+    volumes:
+      - ./query-script:/app
+
+    secrets:
+      - postgres-passwd
+      - weatherapi-key
+
+  db:
+    image: postgres:14.2
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+
+    secrets:
+      - postgres-passwd
+
+    env_file: ./env/dev.env
+
+    ports:
+      - "5432:5432"
+
+secrets:
+  postgres-passwd:
+    file: ./secrets/postgres_password
+
+  weatherapi-key:
+    file: ./secrets/weather-apikey

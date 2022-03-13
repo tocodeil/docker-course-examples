@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  web:
+    image: "ynonp/deploy-to-k8s-livedemo:1.0"
+    ports:
+      - "3000:3000"
+    environment:
+      REDIS_HOST: redis
+
+  redis:
+    image: "redis:6.2-alpine"
+    volumes:
+      - "data:/data"
+
+volumes:
+  data:
+
+

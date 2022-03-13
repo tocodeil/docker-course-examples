@@ -1,0 +1,29 @@
+# docker-compose.yml
+
+version: "3.9"
+
+services:
+  app:
+    image: node:17
+    working_dir: /app
+    command: sh -c "npm install && node server-redis.js"
+    volumes:
+      - ".:/app"
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      REDIS_HOST: myredis
+
+  myredis:
+    image: redis:6.2
+    volumes:
+      - "redis-data:/data"
+
+volumes:
+  redis-data:
+
+
+
+

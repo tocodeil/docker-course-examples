@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose-k8s.yml
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: query-script
+  name: query-script
+spec:
+  schedule: "0 8 * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -f ../docker-compose-k8s.yml
+            kompose.version: 1.26.1 (a9d05d509)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: query-script
+        spec:
+          containers:
+            - env:
+                - name: DB_HOST
+                  value: db
+                - name: POSTGRES_DB
+                  valueFrom:
+                    configMapKeyRef:
+                      key: POSTGRES_DB
+                      name: env-k8s-env
+                - name: POSTGRES_PASSWORD_FILE
+                  valueFrom:
+                    configMapKeyRef:
+                      key: POSTGRES_PASSWORD_FILE
+                      name: env-k8s-env
+                - name: POSTGRES_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      key: POSTGRES_USER
+                      name: env-k8s-env
+                - name: WEATHER_API_KEY_FILE
+                  valueFrom:
+                    configMapKeyRef:
+                      key: WEATHER_API_KEY_FILE
+                      name: env-k8s-env
+              image: ynonp/deploy-weather-to-k8s-query-script:1.0
+              name: query-script
+              resources: {}
+              volumeMounts:
+                - mountPath: /run/secrets/postgres-passwd
+                  name: postgres-passwd
+                - mountPath: /run/secrets/weather-apikey
+                  name: weather-apikey
+          restartPolicy: Never
+          volumes:
+            - name: postgres-passwd
+              secret:
+                items:
+                  - key: postgres-passwd
+                    path: postgres-passwd
+                secretName: postgres-passwd
+            - name: weather-apikey
+              secret:
+                items:
+                  - key: weather-apikey
+                    path: weather-apikey
+                secretName: weather-apikey
+status: {}

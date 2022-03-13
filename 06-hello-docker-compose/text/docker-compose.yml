@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  counter:
+    image: node:16
+    working_dir: /app
+    command: bash -c "npm install -g nodemon && npm install && nodemon counter.js"
+    volumes:
+      - ".:/app"
+    ports:
+      - "3000:3000"
+    environment:
+      REDIS_HOST: redis
+
+  redis:
+    image: redis
+    volumes:
+      - "data:/data"
+
+volumes:
+  data:

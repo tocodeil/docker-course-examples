@@ -1,0 +1,5 @@
+# file .dockerignore
+# lines beginning with a # are comments
+
+# ignore node_modules directory:
+node_modules/

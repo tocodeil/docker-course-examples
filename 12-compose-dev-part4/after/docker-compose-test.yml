@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  server:
+    image: node:17
+    working_dir: /app
+    command: bash -c "npm install && npm run test"
+    volumes:
+      - ./server:/app
+
+    env_file: ./env/test.env
+
+    environment:
+      DB_HOST: db
+
+    secrets:
+      - postgres-passwd
+
+  db:
+    image: postgres:14.2
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+
+    secrets:
+      - postgres-passwd
+
+    env_file: ./env/test.env
+
+secrets:
+  postgres-passwd:
+    file: ./secrets/postgres_password
+
+

@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  web:
+    image: "ynonp/deploy-counter-service:1.0"
+    ports:
+      - "3000:3000"
+    environment:
+      REDIS_HOST: redis
+
+  redis:
+    image: "redis:alpine"
+    volumes:
+      - "data:/data"
+
+volumes:
+  data:
+ 

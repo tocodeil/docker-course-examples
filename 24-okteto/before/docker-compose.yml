@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  web:
+    image: "node:17"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ".:/app"
+    working_dir: "/app"
+    command: bash -c "npm install && npm install -g nodemon && nodemon /app/server.js"
+    environment:
+      REDIS_HOST: redis
+
+  redis:
+    image: "redis:alpine"
+    volumes:
+      - "data:/data"
+
+volumes:
+  data:
+
