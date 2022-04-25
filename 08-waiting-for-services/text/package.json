@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^4.4.0",
     "redis": "^3.1.2",
-    "wait-on": "^6.0.0"
+    "wait-on": "^6.0.1"
   }
 }

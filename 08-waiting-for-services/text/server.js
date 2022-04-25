@@ -1,30 +1,39 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const app = express();
+const port = 3000;
 
-let
-  redis     = require('redis'),
-  /* Values are hard-coded for this example, it's usually best to bring these in via file or environment variable for production */
-  client    = redis.createClient({
-    port      : 6379,
-    host      : 'redis',        // replace with your hostanme or IP address
-  });
+const { MongoClient } = require("mongodb");
+const { MONGO_USER, MONGO_PASSWORD, MONGO_HOST } = process.env;
+const uri = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:27017/`;
 
-app.get('/', (req, res) => {
-  client.get(req.hostname, (err, count) => {
-    if (err) return next(err);
-    res.send({ count });
-  });
-});
+const waitOn = require('wait-on');
 
-app.post('/', (req, res, next) => {
-  client.incr(req.hostname, (err, count) => {
-    if (err) return next(err);
+const opts = {
+  resources: [
+    `tcp:${MONGO_HOST}:27017`,
+  ],
+};
 
-    res.send({ count });
-  });
-});
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+// Create a new MongoClient
+const client = new MongoClient(uri);
+async function run() {
+  try {
+    await waitOn(opts);
+
+    // Connect the client to the server
+    await client.connect();
+    // Establish and verify connection
+    await client.db("admin").command({ ping: 1 });
+
+    app.get('/', (req, res) => {
+      res.send("Connected To Mongo :)");
+    });
+
+    app.listen(port);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);

@@ -10,18 +10,15 @@ services:
     ports:
       - "3000:3000"
     environment:
-      MONGO_URL: mongodb://root:example@mongo/
+      MONGO_USER: root
+      MONGO_PASSWORD: example
+      MONGO_HOST: mongo
 
   mongo:
-    image: "mongo"
-    command: sh -c "sleep 0; mongod"
-    volumes:
-      - data:/data
+    image: mongo:5
+    command: bash -c "sleep 60 && mongod"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
-
-volumes:
-  data:
 
